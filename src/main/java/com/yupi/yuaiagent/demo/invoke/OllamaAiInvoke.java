@@ -1,27 +1,24 @@
 package com.yupi.yuaiagent.demo.invoke;
 
 import jakarta.annotation.Resource;
-import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-//@Component
-public class SpringAiAiInvoke implements CommandLineRunner {
+// 取消注释即可在 SpringBoot 项目启动时执行
+@Component
+public class OllamaAiInvoke implements CommandLineRunner {
 
     @Resource
-    private ChatModel dashscopeChatModel;
+    private ChatModel ollamaChatModel;
+
     @Override
     public void run(String... args) throws Exception {
-        AssistantMessage output=dashscopeChatModel.call(new Prompt(
-                "你好，你是谁?"
-        ))
+        AssistantMessage output = ollamaChatModel.call(new Prompt("你好，我是鱼皮"))
                 .getResult()
                 .getOutput();
         System.out.println(output.getText());
-
-
     }
 }
