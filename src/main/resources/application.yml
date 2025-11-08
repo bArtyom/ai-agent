@@ -11,6 +11,23 @@ spring:
       base-url: http://localhost:11434
       chat:
         model: qwen3:4b
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ai_agent?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 1234
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid: 
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+  # MyBatis-Plus 配置
+mybatis-plus:
+    mapper-locations: classpath:mapper/*.xml
+    type-aliases-package: com.yupi.yuaiagent.model.entity
+    configuration:
+      map-underscore-to-camel-case: true
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 server:
   port: 8123
   servlet:

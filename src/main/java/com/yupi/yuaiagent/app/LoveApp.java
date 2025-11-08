@@ -1,14 +1,10 @@
 package com.yupi.yuaiagent.app;
 
 import com.yupi.yuaiagent.advisor.MyLoggerAdvisor;
-import com.yupi.yuaiagent.advisor.ReReadingAdvisor;
-
-import com.yupi.yuaiagent.chatmemory.FileBasedChatMemory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.memory.InMemoryChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.stereotype.Component;
@@ -29,16 +25,13 @@ public class LoveApp {
             "恋爱状态询问沟通、习惯差异引发的矛盾；已婚状态询问家庭责任与亲属关系处理的问题。" +
             "引导用户详述事情经过、对方反应及自身想法，以便给出专属解决方案。";
 
-    public LoveApp(ChatModel ollamaChatModel) {
-        // 初始化基于内存的对话记忆
-        //初始化基于文件的对话记忆
-        //user.dir 获取当前项目的根目录
-        String fileDir=System.getProperty("user.dir")+"/chat-memory";
-        ChatMemory chatMemory=new FileBasedChatMemory(fileDir);
+    public LoveApp(ChatModel ollamaChatModel, ChatMemory chatMemory) {
+        // 通过构造器注入 ChatMemory，Spring 会自动注入 MySQLChatMemory 实例
         chatClient=ChatClient.builder(ollamaChatModel)
                 .defaultSystem(SYSTEM_PROMPT)
                 .defaultAdvisors(
-                        new MessageChatMemoryAdvisor(chatMemory)
+                        new MessageChatMemoryAdvisor(chatMemory),
+                        new MyLoggerAdvisor()
                 )
                 .build();
     }
