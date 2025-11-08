@@ -5,6 +5,7 @@ import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Slf4j
 @Component
+@Primary  // 标记为主要的 ChatMemory 实现,Spring 会优先使用这个
 public class MySQLChatMemory implements ChatMemory {
 
     @Autowired

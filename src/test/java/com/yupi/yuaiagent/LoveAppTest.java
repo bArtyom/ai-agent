@@ -30,4 +30,46 @@ class LoveAppTest {
         answer = loveApp.doChat(message, chatId);
         Assertions.assertNotNull(answer);
     }
+    
+    /**
+     * 测试使用自定义用户信息
+     */
+    @Test
+    void testChatWithCustomUser() {
+        String chatId = UUID.randomUUID().toString();
+        
+        // 使用自定义用户名和职业
+        String answer = loveApp.doChatWithUser(
+            "我最近和女朋友因为工作加班太多经常吵架，该怎么办？",
+            chatId,
+            "张三",           // 自定义用户名
+            "Java后端工程师"   // 自定义职业
+        );
+        
+        System.out.println("AI 回答：\n" + answer);
+        Assertions.assertNotNull(answer);
+    }
+    
+    /**
+     * 测试生成恋爱报告
+     */
+    @Test
+    void testChatWithReport() {
+        String chatId = UUID.randomUUID().toString();
+        
+        LoveApp.LoveReport report = loveApp.doChatWithReportForUser(
+            "我是一名程序员，想找女朋友但不知道从何开始",
+            chatId,
+            "李四",
+            "前端工程师"
+        );
+        
+        System.out.println("报告标题：" + report.title());
+        System.out.println("建议列表：");
+        report.suggestions().forEach(s -> System.out.println("  - " + s));
+        
+        Assertions.assertNotNull(report);
+        Assertions.assertNotNull(report.title());
+        Assertions.assertFalse(report.suggestions().isEmpty());
+    }
 }
