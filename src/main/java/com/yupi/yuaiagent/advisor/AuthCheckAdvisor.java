@@ -1,121 +1,148 @@
 package com.yupi.yuaiagent.advisor;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.springframework.ai.chat.client.advisor.api.*;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.chat.client.advisor.api.*;
+import org.springframework.ai.chat.messages.Message;
+import org.springframework.ai.chat.messages.UserMessage;
 import reactor.core.publisher.Flux;
 
+import java.util.*;
 
+/**
+ * 权限校验和违禁词检验 Advisor
+ */
 @Slf4j
 public class AuthCheckAdvisor implements CallAroundAdvisor, StreamAroundAdvisor {
-    //违禁词列表
-    private static final Set<String> BANNED_WORDS=new HashSet<>(Arrays.asList(
-    "暴力", "色情", "赌博", "违法"
+
+    // 违禁词列表
+    private static final Set<String> BANNED_WORDS = new HashSet<>(Arrays.asList(
+        "暴力", "色情", "赌博", "毒品", "政治敏感", "违法"
     ));
 
-    //用户权限等级
-    private static final String PARAM_USER_ROLE = "userRole";
-    private static final String PARAM_USER_ID = "userId";
-
-
+    // 白名单用户ID
+    private static final Set<String> WHITELIST_USERS = new HashSet<>(Arrays.asList(
+        "admin", "vip-user"
+    ));
     
-    @Override
-    public AdvisedResponse aroundCall(AdvisedRequest advisedRequest, CallAroundAdvisorChain chain) {
-        log.info("执行权限检查跟内容检查的Advisor");
+    private AdvisedRequest before(AdvisedRequest advisedRequest) {
+        //1、获取用户信息
+        String userId=getUserId(advisedRequest);
+        log.info("处理用户请求，userId:{}",userId);
 
-        //1、权限检查
-        if(!checkPermission(advisedRequest)){
-            throw new RuntimeException("权限不足，拒绝访问");
+        //2、权限校验
+        checkPermission(userId);
+
+        //3、违禁词检查
+        checkBannedWords(advisedRequest);
+
+        //4、记录审查日志
+        logAudit(userId,advisedRequest);
+
+        return advisedRequest;
+    }
+
+    /**
+     * 获取用户id
+     * @param advisedRequest
+     * @return
+     */
+    private String getUserId(AdvisedRequest advisedRequest){
+        Map<String,Object> adviseContext=advisedRequest.adviseContext();
+
+        //从上下文中获取用户id
+        Object userId=adviseContext.get("userId");
+        if(userId==null)
+            userId=adviseContext.get("user_id");
+        return userId!=null?userId.toString():"anonymous";
+    }
+    
+    /**
+     * 用户权限校验
+     * @param userId
+     */
+    private void checkPermission(String userId){
+        if("banned-user".equals(userId)){
+            throw new SecurityException("用户已被封禁，无法使用服务");
+        }
+
+        if(userId.startsWith("guest-") && !WHITELIST_USERS.contains(userId)){
+            throw new SecurityException("游客权限不足，请先登录");
+        }
+        log.debug("权限校验通过:{}",userId);
+    }
+
+    /**
+     * 违禁词检查
+     * @param advisedRequest
+     */
+    private void checkBannedWords(AdvisedRequest advisedRequest){
+        // 直接从 AdvisedRequest 获取消息列表
+        List<Message> messages = advisedRequest.messages();
+        
+        for(Message message: messages){
+            if(message instanceof UserMessage userMessage){
+                String content = userMessage.getText();
+
+                //检查违禁词
+                for(String bannedWord: BANNED_WORDS){
+                    if(content.contains(bannedWord)){
+                        log.warn("检测到违禁词：{} in message :{}",bannedWord,content);
+                        throw new SecurityException("输入内容包含违禁词："+bannedWord);
+                    }
+                }
+         }
+       }
+       log.debug("违禁词检查通过");
+    }
+    
+    /**
+     * 记录审计日志
+     */
+    private void logAudit(String userId, AdvisedRequest advisedRequest) {
+        // 直接从 AdvisedRequest 获取消息列表
+        List<Message> messages = advisedRequest.messages();
+        
+        StringBuilder messageContent = new StringBuilder();
+        for (Message message : messages) {
+            if (message instanceof UserMessage userMessage) {
+                messageContent.append(userMessage.getText()).append(" ");
+            }
         }
         
-        //2、违禁词检查
-        if(!checkBannedWords(advisedRequest)){
-            throw new RuntimeException("请求内容包含违禁词，拒绝访问");
+        if (messageContent.length() > 0) {
+            log.info("审计日志 - 用户: {}, 消息: {}", userId, 
+                    messageContent.toString().substring(0, Math.min(50, messageContent.length())));
         }
+    }
 
-        return chain.nextAroundCall(advisedRequest);
-
+    @Override
+    public AdvisedResponse aroundCall(AdvisedRequest advisedRequest, CallAroundAdvisorChain chain) {
+            // 前置处理：权限检查和违禁词检查
+            AdvisedRequest checkedRequest = this.before(advisedRequest);
+            
+            // 继续调用链（调用下一个 Advisor 或 LLM）
+            AdvisedResponse response = chain.nextAroundCall(checkedRequest);
+            
+            log.debug("{}：同步调用完成", this.getName());
+            return response;
     }
 
     @Override
     public Flux<AdvisedResponse> aroundStream(AdvisedRequest advisedRequest, StreamAroundAdvisorChain chain) {
-        log.info("执行流式权限检查跟内容检查的Advisor");
-
-        //1、权限检查
-        if(!checkPermission(advisedRequest)){
-            return Flux.error(new RuntimeException("权限不足，拒绝访问"));
-        }
-        
-        //2、违禁词检查
-        if(!checkBannedWords(advisedRequest)){
-            return Flux.error(new RuntimeException("请求内容包含违禁词，拒绝访问"));
-        }
-
-        return chain.nextAroundStream(advisedRequest);
+        // 前置检查
+        AdvisedRequest checkedRequest = this.before(advisedRequest);
+        // 继续流式调用链
+        return chain.nextAroundStream(checkedRequest);
     }
-
-
     
 
-    /**
-     * 检查用户权限
-     * @param advisedRequest
-     * @return
-     */
-    private boolean checkPermission(AdvisedRequest advisedRequest) {
-        Map<String,Object> advisorParams=advisedRequest.adviseContext();
-        String userRole=(String)advisorParams.get(PARAM_USER_ROLE);
-        String userId=(String)advisorParams.get(PARAM_USER_ID);
-
-        log.info("检查用户权限，用户ID：{}，用户角色：{}",userId,userRole);
-
-        if(userRole==null){
-            log.warn("用户角色为空，拒绝访问");
-            return false;
-        }
-
-        if("GUEST".equals(userRole)){
-            log.warn("用户角色为GUEST，拒绝访问");
-            return false;
-        }
-        return true;
+    @Override
+    public int getOrder() {
+        return 0;
     }
-
-    /**
-     * 检查违禁词
-     * @param advisedRequest
-     * @return
-     */
-    private boolean checkBannedWords(AdvisedRequest advisedRequest){
-        Map<String,Object> advisorParams=advisedRequest.adviseContext();
-        List<String> messages=(List<String>)advisorParams.get("messages");
-        for(String message: messages){
-            for(String bannedWord:BANNED_WORDS){
-                if(message.contains(bannedWord)){
-                    log.warn("检测到违禁词：{}，拒绝访问",bannedWord);
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    
-
 
     @Override
     public String getName() {
         return this.getClass().getSimpleName();
-    }
-
-    @Override
-    public int getOrder() {
-        return 0;  // 优先级最高，第一个执行
     }
 }
