@@ -60,7 +60,7 @@ class LoveAppTest {
         LoveApp.LoveReport report = loveApp.doChatWithReportForUser(
             "我是一名程序员，想找女朋友但不知道从何开始",
             chatId,
-            "李四",
+            "王五",
             "前端工程师"
         );
         

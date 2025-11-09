@@ -35,20 +35,18 @@ public class LoveApp {
 
     /**
      * 构造器注入
-     * Spring 会自动注入 ChatModel 和 ChatMemory
-     * 
-     * @param ollamaChatModel Spring 自动装配的 ChatModel
+     * Spring 会自动注入 ChatModel 和 ChatMemory,Chatmodel使用OllamaChatModel或者dashscopeChatModel
      * @param chatMemory Spring 自动装配的 ChatMemory
      *                   使用 @Qualifier 指定要注入的实现：
      *                   - "mysqlChatMemory": MySQL 数据库存储
      *                   - "fileChatMemory": 文件存储
      */
-    public LoveApp(ChatModel ollamaChatModel, 
+    public LoveApp(ChatModel dashscopeChatModel,
                    @Qualifier("mysqlChatMemory") ChatMemory chatMemory) {
         this.chatMemory = chatMemory;
         
         // 构建 ChatClient，不设置 defaultSystem，改为动态加载
-        chatClient = ChatClient.builder(ollamaChatModel)
+        chatClient = ChatClient.builder(dashscopeChatModel)
                 .defaultAdvisors(
                         new MessageChatMemoryAdvisor(chatMemory),
                         new MyLoggerAdvisor()
