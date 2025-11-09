@@ -10,6 +10,7 @@ import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -37,9 +38,13 @@ public class LoveApp {
      * Spring 会自动注入 ChatModel 和 ChatMemory
      * 
      * @param ollamaChatModel Spring 自动装配的 ChatModel
-     * @param chatMemory Spring 自动装配的 ChatMemory（来自 ChatMemoryConfig）
+     * @param chatMemory Spring 自动装配的 ChatMemory
+     *                   使用 @Qualifier 指定要注入的实现：
+     *                   - "mysqlChatMemory": MySQL 数据库存储
+     *                   - "fileChatMemory": 文件存储
      */
-    public LoveApp(ChatModel ollamaChatModel, ChatMemory chatMemory) {
+    public LoveApp(ChatModel ollamaChatModel, 
+                   @Qualifier("mysqlChatMemory") ChatMemory chatMemory) {
         this.chatMemory = chatMemory;
         
         // 构建 ChatClient，不设置 defaultSystem，改为动态加载

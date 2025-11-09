@@ -6,11 +6,13 @@ import com.esotericsoftware.kryo.io.Output;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.Message;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component("fileChatMemory")  // 指定 Bean 名称
 public class FileBasedChatMemory implements ChatMemory {
 
     private final String BASE_DIR;
@@ -19,6 +21,11 @@ public class FileBasedChatMemory implements ChatMemory {
     static {
         kryo.setRegistrationRequired(false);
         kryo.setInstantiatorStrategy(new StdInstantiatorStrategy());
+    }
+
+    // 默认构造函数（Spring 使用）
+    public FileBasedChatMemory() {
+        this(System.getProperty("user.dir") + "/chat-memory");
     }
 
     //构建对象时，指定文件保存目录

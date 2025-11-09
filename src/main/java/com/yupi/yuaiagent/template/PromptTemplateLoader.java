@@ -30,7 +30,7 @@ public class PromptTemplateLoader {
     public String loadTemplate(String templatePath){
         try  {
             ClassPathResource resource=new ClassPathResource(templatePath);
-            InputStream inputStream = resource.getInputStream();
+            InputStream inputStream = resource.getStream();
             String template=StreamUtils.copyToString(inputStream,StandardCharsets.UTF_8);
             log.info("成功加载模板：{}",template);
             return template;

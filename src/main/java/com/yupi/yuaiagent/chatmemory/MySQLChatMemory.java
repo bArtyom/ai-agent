@@ -21,8 +21,7 @@ import java.util.List;
 
 
 @Slf4j
-@Component
-@Primary  // 标记为主要的 ChatMemory 实现,Spring 会优先使用这个
+@Component("mysqlChatMemory")
 public class MySQLChatMemory implements ChatMemory {
 
     @Autowired
