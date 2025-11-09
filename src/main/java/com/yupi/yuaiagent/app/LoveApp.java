@@ -41,12 +41,12 @@ public class LoveApp {
      *                   - "mysqlChatMemory": MySQL 数据库存储
      *                   - "fileChatMemory": 文件存储
      */
-    public LoveApp(ChatModel dashscopeChatModel,
+    public LoveApp(@Qualifier("ollamaChatModel") ChatModel chatModel,
                    @Qualifier("mysqlChatMemory") ChatMemory chatMemory) {
         this.chatMemory = chatMemory;
         
         // 构建 ChatClient，不设置 defaultSystem，改为动态加载
-        chatClient = ChatClient.builder(dashscopeChatModel)
+        chatClient = ChatClient.builder(chatModel)
                 .defaultAdvisors(
                         new MessageChatMemoryAdvisor(chatMemory),
                         new MyLoggerAdvisor()

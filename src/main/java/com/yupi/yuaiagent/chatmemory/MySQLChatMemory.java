@@ -5,7 +5,6 @@ import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -13,7 +12,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yupi.yuaiagent.mapper.ChatMemoryMapper;
 import com.yupi.yuaiagent.model.entity.ChatMemoryEntity;
 
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -21,7 +19,7 @@ import java.util.List;
 
 
 @Slf4j
-@Component("mysqlChatMemory")
+@Component("mysqlChatMemory")  // 指定 Bean 名称
 public class MySQLChatMemory implements ChatMemory {
 
     @Autowired

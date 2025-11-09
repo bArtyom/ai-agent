@@ -10,7 +10,7 @@ spring:
     ollama:
       base-url: http://localhost:11434
       chat:
-        model: qwen3:4b
+        model: qwen3-vl:4b
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/ai_agent?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai

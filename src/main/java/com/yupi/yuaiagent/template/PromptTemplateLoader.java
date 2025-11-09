@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bouncycastle.util.encoders.UTF8;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
