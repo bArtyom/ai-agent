@@ -14,10 +14,16 @@ public class MyLoggerAdvisor implements CallAroundAdvisor, StreamAroundAdvisor {
 
     @Override
     public int getOrder() {
-        return 0;
+        return 1;
     }
     private AdvisedRequest before(AdvisedRequest request){
         log.info("AI Request:{}",request.userText());
+         // 打印系统消息（可能包含检索到的文档）
+        if (request.systemText() != null && !request.systemText().isEmpty()) {
+            log.info("📚 [MyLoggerAdvisor] 系统消息长度: {} 字符", request.systemText().length());
+            log.info("📚 [MyLoggerAdvisor] 系统消息预览: {}", 
+                request.systemText().substring(0, Math.min(200, request.systemText().length())));
+        }
         return request;
     }
 

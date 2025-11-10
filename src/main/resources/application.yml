@@ -7,10 +7,21 @@ spring:
       chat:
         options:
           model: qwen-plus
+      # 显式配置 DashScope EmbeddingModel (可选)
+      # embedding:
+      #   options:
+      #     model: text-embedding-v2
     ollama:
       base-url: http://localhost:11434
       chat:
-        model: qwen3-vl:4b
+        model: qwen3:4b
+      # 显式配置 Ollama EmbeddingModel
+      embedding:
+        options:
+          model: nomic-embed-text  # 默认模型
+          # 其他可选模型:
+          # - mxbai-embed-large (更强大但更慢)
+          # - all-minilm (更快但精度较低)
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/ai_agent?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai

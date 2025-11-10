@@ -1,6 +1,5 @@
-package com.yupi.yuaiagent;
+package com.yupi.yuaiagent.chatmemory;
 
-import com.yupi.yuaiagent.chatmemory.MySQLChatMemory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.chat.messages.AssistantMessage;
