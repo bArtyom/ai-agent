@@ -22,6 +22,16 @@ spring:
           # 其他可选模型:
           # - mxbai-embed-large (更强大但更慢)
           # - all-minilm (更快但精度较低)
+    datasource: 
+      url: jdbc:postgresql://172.16.109.90/ai_agent
+      username: lsp
+      password: lsp3438516
+    vectorstore:
+      pgvector:
+        index-type: HNSW
+        dimensions: 768
+        distance-type: COSINE_DISTANCE
+        max-document-batch-size: 10000
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/ai_agent?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai

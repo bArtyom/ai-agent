@@ -3,8 +3,15 @@ package com.yupi.yuaiagent;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
 
-@SpringBootApplication
+import com.yupi.yuaiagent.rag.PgVectorVectorStoreConfig;
+
+@SpringBootApplication(exclude ={
+    DataSourceAutoConfiguration.class,
+    JdbcTemplateAutoConfiguration.class
+})
 @MapperScan("com.yupi.yuaiagent.mapper")
 public class YuAiAgentApplication {
 
