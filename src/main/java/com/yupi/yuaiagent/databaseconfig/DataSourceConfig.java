@@ -1,5 +1,8 @@
 package com.yupi.yuaiagent.databaseconfig;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -25,11 +28,30 @@ public class DataSourceConfig {
 
     /**
      * 向量数据源：PostgreSQL（向量存储，spring.ai.datasource）
+     * 使用手动配置避免 @ConfigurationProperties 绑定问题
      */
     @Bean(name = "pgVectorDataSource")
-    @ConfigurationProperties(prefix = "spring.ai.datasource")
-    public DataSource pgVectorDataSource() {
-        return DataSourceBuilder.create().build();
+    public DataSource pgVectorDataSource(
+            @Value("${spring.ai.datasource.url}") String url,
+            @Value("${spring.ai.datasource.username}") String username,
+            @Value("${spring.ai.datasource.password}") String password,
+            @Value("${spring.ai.datasource.driver-class-name:org.postgresql.Driver}") String driverClassName
+    ) {
+        
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(url);
+        config.setUsername(username);
+        config.setPassword(password);
+        config.setDriverClassName(driverClassName);
+        
+        // 连接池配置
+        config.setMinimumIdle(2);
+        config.setMaximumPoolSize(10);
+        config.setConnectionTimeout(30000);
+        config.setIdleTimeout(600000);
+        config.setMaxLifetime(1800000);
+        
+        return new HikariDataSource(config);
     }
 
     /**
@@ -44,7 +66,7 @@ public class DataSourceConfig {
 
     /**
      * PostgreSQL JdbcTemplate（用于向量存储操作）
-     * ← 这个是你需要注入的！
+     * 这个 JdbcTemplate 专门用于 PGVector 向量存储
      */
     @Bean(name = "pgVectorJdbcTemplate")
     public JdbcTemplate pgVectorJdbcTemplate(

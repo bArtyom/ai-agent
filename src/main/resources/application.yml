@@ -8,9 +8,8 @@ spring:
         options:
           model: qwen-plus
       # 显式配置 DashScope EmbeddingModel (可选)
-      # embedding:
-      #   options:
-      #     model: text-embedding-v2
+      embedding:
+        enabled: false
     ollama:
       base-url: http://localhost:11434
       chat:
@@ -23,9 +22,10 @@ spring:
           # - mxbai-embed-large (更强大但更慢)
           # - all-minilm (更快但精度较低)
     datasource: 
-      url: jdbc:postgresql://172.16.109.90/ai_agent
+      url: jdbc:postgresql://172.16.109.90:54320/ai_agent
       username: lsp
       password: lsp3438516
+      driver-class-name: org.postgresql.Driver
     vectorstore:
       pgvector:
         index-type: HNSW
