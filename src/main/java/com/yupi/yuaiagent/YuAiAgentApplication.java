@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
 
-import com.yupi.yuaiagent.rag.PgVectorVectorStoreConfig;
+import com.yupi.yuaiagent.rag.config.PgVectorVectorStoreConfig;
 
 @SpringBootApplication(exclude ={
     DataSourceAutoConfiguration.class,

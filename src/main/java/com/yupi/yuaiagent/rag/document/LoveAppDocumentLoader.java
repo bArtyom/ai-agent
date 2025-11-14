@@ -1,4 +1,4 @@
-package com.yupi.yuaiagent.rag;
+package com.yupi.yuaiagent.rag.document;
 
 
 import lombok.extern.slf4j.Slf4j;

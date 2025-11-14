@@ -1,4 +1,4 @@
-package com.yupi.yuaiagent.rag;
+package com.yupi.yuaiagent.rag.config;
 
 
 import jakarta.annotation.Resource;
@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.yupi.yuaiagent.rag.document.LoveAppDocumentLoader;
+import com.yupi.yuaiagent.rag.document.MyKeywordEnricher;
+import com.yupi.yuaiagent.rag.document.MyTokenTextSplitter;
 
 import java.util.List;
 

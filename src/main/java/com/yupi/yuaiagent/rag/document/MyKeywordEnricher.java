@@ -1,4 +1,4 @@
-package com.yupi.yuaiagent.rag;
+package com.yupi.yuaiagent.rag.document;
 
 
 import jakarta.annotation.Resource;

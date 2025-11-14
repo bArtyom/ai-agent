@@ -1,4 +1,4 @@
-package com.yupi.yuaiagent.rag;
+package com.yupi.yuaiagent.rag.config;
 
 
 import com.alibaba.cloud.ai.dashscope.api.DashScopeApi;
@@ -31,4 +31,5 @@ public class LoveAppRagCloudAdvisorConfig {
                 .documentRetriever(documentRetriever)
                 .build();
     }
+
 }
