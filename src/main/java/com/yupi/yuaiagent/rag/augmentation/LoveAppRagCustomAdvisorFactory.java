@@ -23,6 +23,7 @@ public class LoveAppRagCustomAdvisorFactory {
             .build();
         return RetrievalAugmentationAdvisor.builder()
         .documentRetriever(documentRetrieverFromVectorStore)
+                .queryAugmenter(LoveAppContextualQueryAugmenterFactory.createInstance())
         .build();
     }
 }
