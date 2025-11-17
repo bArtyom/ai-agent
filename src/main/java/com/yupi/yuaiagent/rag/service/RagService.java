@@ -6,8 +6,11 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.client.advisor.api.Advisor;
+import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * RAG 服务层
@@ -22,6 +25,9 @@ public class RagService {
     
     @Resource
     private QueryRewriter queryRewriter;
+    
+    @Resource
+    private HybridSearchService hybridSearchService;
     
     /**
      * 改写用户查询
@@ -54,5 +60,30 @@ public class RagService {
      */
     public VectorStore getVectorStore() {
         return loveAppVectorStore;
+    }
+    
+    /**
+     * 混合检索文档
+     * 优先从向量数据库检索，不足时从 MySQL 补充
+     * 
+     * @param query 查询文本
+     * @param category 分类
+     * @param topK 返回数量
+     * @param similarityThreshold 相似度阈值
+     * @return 检索到的文档列表
+     */
+    public List<Document> hybridSearchDocuments(
+            String query,
+            String category,
+            int topK,
+            double similarityThreshold) {
+        return hybridSearchService.hybridSearch(query, category, topK, similarityThreshold);
+    }
+    
+    /**
+     * 混合检索文档（简化版）
+     */
+    public List<Document> hybridSearchDocuments(String query, String category) {
+        return hybridSearchService.hybridSearch(query, category);
     }
 }
