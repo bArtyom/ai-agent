@@ -15,7 +15,7 @@ public class MyKeywordEnricher {
     @Resource
     private ChatModel ollamaChatModel;
 
-    List<Document> enrichDocuments(List<Document> documents){
+    public List<Document> enrichDocuments(List<Document> documents){
         KeywordMetadataEnricher enricher = new KeywordMetadataEnricher(this.ollamaChatModel, 5);
         return enricher.apply(documents);
    }

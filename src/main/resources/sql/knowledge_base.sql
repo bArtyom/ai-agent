@@ -1,4 +1,5 @@
 -- 知识库表（作为向量数据库的降级方案）
+use ai_agent;
 CREATE TABLE IF NOT EXISTS `knowledge_base` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键',
   `title` VARCHAR(200) NOT NULL COMMENT '知识标题',
