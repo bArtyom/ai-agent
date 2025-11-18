@@ -34,16 +34,6 @@ public class HybridSearchService {
     private KnowledgeBaseMapper knowledgeBaseMapper;
     
     /**
-     * 初始化时打印数据源信息
-     */
-    @jakarta.annotation.PostConstruct
-    public void init() {
-        log.info("✅ HybridSearchService 初始化完成");
-        log.info("   - VectorStore: {}", loveAppVectorStore.getClass().getSimpleName());
-        log.info("   - KnowledgeBaseMapper: 已注入（连接到 MySQL）");
-    }
-    
-    /**
      * 混合检索
      * 
      * @param query 查询文本
