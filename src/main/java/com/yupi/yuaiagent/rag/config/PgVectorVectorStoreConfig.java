@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import static org.springframework.ai.vectorstore.pgvector.PgVectorStore.PgDistanceType.COSINE_DISTANCE;
 import static org.springframework.ai.vectorstore.pgvector.PgVectorStore.PgIndexType.HNSW;
 
-@Configuration
+//@Configuration
 public class PgVectorVectorStoreConfig {
 
     @Bean
