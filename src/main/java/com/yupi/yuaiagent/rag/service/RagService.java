@@ -33,9 +33,9 @@ public class RagService {
      * 改写用户查询
      */
     public String rewriteQuery(String originalQuery) {
-        log.debug("原始查询: {}", originalQuery);
+        log.info("📝 [RAG-服务] 开始查询改写流程");
         String rewritten = queryRewriter.doQueryRewrite(originalQuery);
-        log.debug("改写后查询: {}", rewritten);
+        log.info("📝 [RAG-服务] 查询改写完成");
         return rewritten;
     }
     

@@ -28,7 +28,13 @@ public class MyLoggerAdvisor implements CallAroundAdvisor, StreamAroundAdvisor {
     }
 
     private void observeAfter(AdvisedResponse advisedResponse){
-        log.info("AI Response:{}",advisedResponse.response().getResult().getOutput().getText());
+        String fullResponse = advisedResponse.response().getResult().getOutput().getText();
+        // 只输出前100个字符的摘要,避免日志重复
+        String summary = fullResponse.length() > 100 
+            ? fullResponse.substring(0, 100) + "..." 
+            : fullResponse;
+        log.info("✅ [MyLoggerAdvisor] AI 响应摘要: {}", summary);
+        log.debug("完整响应: {}", fullResponse); // 完整内容放在 debug 级别
     }
 
     @Override

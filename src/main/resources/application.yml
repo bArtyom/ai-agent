@@ -21,17 +21,18 @@ spring:
           # 其他可选模型:
           # - mxbai-embed-large (更强大但更慢)
           # - all-minilm (更快但精度较低)
-    datasource: 
-      url: jdbc:postgresql://172.16.109.90:54320/ai_agent
-      username: lsp
-      password: lsp3438516
-      driver-class-name: org.postgresql.Driver
-    vectorstore:
-      pgvector:
-        index-type: HNSW
-        dimensions: 768
-        distance-type: COSINE_DISTANCE
-        max-document-batch-size: 10000
+    # PostgreSQL 向量数据库配置(如果需要使用 PgVectorStore,需要单独配置)
+    # vectorstore:
+    #   pgvector:
+    #     datasource:
+    #       url: jdbc:postgresql://172.16.109.90:54320/ai_agent
+    #       username: lsp
+    #       password: lsp3438516
+    #       driver-class-name: org.postgresql.Driver
+    #     index-type: HNSW
+    #     dimensions: 768
+    #     distance-type: COSINE_DISTANCE
+    #     max-document-batch-size: 10000
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/ai_agent?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
@@ -48,7 +49,7 @@ mybatis-plus:
     type-aliases-package: com.yupi.yuaiagent.model.entity
     configuration:
       map-underscore-to-camel-case: true
-      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+      # log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 注释掉SQL详细日志,避免输出大量内容参数
 server:
   port: 8123
   servlet:

@@ -1,6 +1,7 @@
 package com.yupi.yuaiagent.rag.document;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.rag.Query;
@@ -9,6 +10,7 @@ import org.springframework.ai.rag.preretrieval.query.transformation.RewriteQuery
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class QueryRewriter {
 
@@ -23,10 +25,12 @@ public class QueryRewriter {
     }
 
     public String doQueryRewrite(String prompt) {
+        log.info("🔄 [RAG-查询改写] 原始查询: {}", prompt);
         Query query = new Query(prompt);
         // 执行查询重写
         Query transformedQuery = queryTransformer.transform(query);
-        // 输出重写后的查询
-        return transformedQuery.text();
+        String rewrittenText = transformedQuery.text();
+        log.info("✅ [RAG-查询改写] 改写后: {}", rewrittenText);
+        return rewrittenText;
     }
 }

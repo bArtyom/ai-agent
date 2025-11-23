@@ -20,6 +20,7 @@ public class PDFGenerationTool {
     public String generatePDF(
             @ToolParam(description = "Name of the file to save the generated PDF") String fileName,
             @ToolParam(description = "Content to be included in the PDF") String content) {
+        System.out.println("当前用户目录：" + System.getProperty("user.dir"));
         String fileDir = FileConstant.FILE_SAVE_DIR + "/pdf";
         String filePath = fileDir + "/" + fileName;
         try {
