@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.tool.Tool;
+import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -126,8 +126,8 @@ public class DatabaseTool {
                 for (int i = 0; i < Math.min(results.size(), 10); i++) {
                     Map<String, Object> row = results.get(i);
                     output.append(String.format("第 %d 行:\n", i + 1));
-                    row.forEach((key, value) -> 
-                        output.append(String.format("  %s: %s\n", key, value))
+                    row.forEach((key, val) ->
+                        output.append(String.format("  %s: %s\n", key, val))
                     );
                     output.append("\n");
                 }

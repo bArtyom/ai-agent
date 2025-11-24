@@ -2,13 +2,13 @@ package com.yupi.yuaiagent.utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import jakarta.mail.*;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.tool.Tool;
+import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Component;
 
-import javax.mail.*;
-import javax.mail.internet.*;
-import java.util.List;
 import java.util.Properties;
 
 /**

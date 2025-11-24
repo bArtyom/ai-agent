@@ -3,7 +3,7 @@ package com.yupi.yuaiagent.utils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.tool.Tool;
+import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Component;
 
 import java.time.*;
